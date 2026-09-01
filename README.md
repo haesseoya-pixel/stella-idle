@@ -2,7 +2,7 @@
 
 성운에서 수소를 먹여 별을 키우는 방치형(idle) 게임입니다. 실제 항성 진화를 게임 진행으로 삼았습니다.
 
-**플레이:** https://haesseoya-pixel.github.io/stella-idle/
+**플레이:** https://stella-idle.web.app/ (미러: https://haesseoya-pixel.github.io/stella-idle/)
 
 ## 컨셉
 
@@ -15,6 +15,7 @@
   - 20 M☉ 초과: 초신성 → **블랙홀**
 - **금속(중원소)**이 프레스티지 재화입니다. 잔해는 유산 갤러리에 남아 영구 보너스를 주고, 중성자별 두 개를 충돌시키면 **킬로노바**로 황금 유물을 얻습니다.
 - 오프라인 진행(기본 8시간, 강화 시 최대 17시간), 업적 23개, 도감 14항목, 저장 코드 내보내기/불러오기.
+- **전세계 랭킹** (최고 질량 · 누적 금속): 랭킹 탭에서 닉네임을 저장하면 자동 등록됩니다. Firebase Firestore 기반, 규칙은 [games-rank-backend](https://github.com/haesseoya-pixel/games-rank-backend).
 
 ## 조작
 
@@ -31,6 +32,7 @@ npm install
 npm run dev       # http://localhost:5173
 npm test          # vitest (경제 공식, 항성 분류, 오프라인, 저장 등 67개)
 npm run build     # tsc --noEmit + vite build → dist/
+npm run deploy    # 빌드 후 Firebase Hosting(stella-idle) 배포
 ```
 
 프레임워크 없이 TypeScript + Canvas 2D + DOM으로 만들었습니다. 그래픽과 사운드(Web Audio)는 모두 코드로 생성되며 외부 에셋이 없습니다.
@@ -39,4 +41,4 @@ npm run build     # tsc --noEmit + vite build → dist/
 
 ## 배포
 
-`main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 배포를 수행합니다.
+기본 배포는 Firebase Hosting(`npm run deploy`)입니다. `main`에 push하면 GitHub Actions가 테스트 → 빌드 → GitHub Pages 미러 배포도 수행합니다.
