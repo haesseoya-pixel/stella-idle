@@ -14,6 +14,8 @@ import { Toasts } from './ui/toast';
 import { Tutorial } from './ui/tutorial';
 import { formatMass, formatTime } from './util/format';
 import { N } from './ui/dom';
+import { getPlayerName, submitScore } from './rank/leaderboard';
+import { currentScores } from './ui/tabs/rankTab';
 
 const game = new Game();
 setNumberMode(game.state.settings.numberFormat);
@@ -31,11 +33,28 @@ const scene = new Scene(canvas, game);
 const toasts = new Toasts(qs('#toasts'));
 const modals = new Modals(qs('#modalRoot'), game, toasts);
 const hud = new Hud(qs('#hud'), qs('#fateWrap'), game, () => modals.openPrestige());
+// ---- global ranking (Firestore via REST) ------------------------------------
+let lastSubmitted = { mass: 0, metals: 0 };
+async function submitRanks(force = false): Promise<string> {
+  const name = getPlayerName();
+  if (!name) return '닉네임을 먼저 저장하세요';
+  const sc = currentScores(game);
+  if (!force && sc.mass <= lastSubmitted.mass * 1.02 && sc.metals <= lastSubmitted.metals) return '변동 없음';
+  const meta = { mass: sc.mass, metals: sc.metals, prestiges: sc.prestiges };
+  const [a, b] = await Promise.all([submitScore('stella-mass', 'stella', sc.mass, meta, name), submitScore('stella-metals', 'stella', sc.metals, meta, name)]);
+  if (a === 'error' || b === 'error') return '랭킹 서버에 연결할 수 없습니다';
+  lastSubmitted = { mass: sc.mass, metals: sc.metals };
+  return a === 'lower' && b === 'lower' ? '기존 기록이 더 높아 그대로입니다' : '랭킹에 등록했습니다';
+}
 const panels = new Panels(game, {
   openSettings: () => modals.openSettings(),
   openPrestige: () => modals.openPrestige(),
   openKilonova: () => modals.openKilonova(),
+  rank: { submitNow: () => submitRanks(true) },
 });
+game.events.on('prestige', () => void submitRanks());
+game.events.on('kilonova', () => void submitRanks());
+window.setInterval(() => void submitRanks(), 60000);
 const tutorial = new Tutorial(game, qs('#hint'));
 
 if (!game.storageOk) qs('#storageWarn').hidden = false;

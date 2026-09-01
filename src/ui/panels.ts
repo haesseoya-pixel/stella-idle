@@ -6,12 +6,13 @@ import { h, N, qs, setText, toggleClass } from './dom';
 import { createLegacyTab } from './tabs/legacyTab';
 import { createPlanetsTab } from './tabs/planetsTab';
 import { createRecordsTab } from './tabs/recordsTab';
+import { createRankTab, type RankTabHooks } from './tabs/rankTab';
 import { createUpgradesTab, type TabView } from './tabs/upgradesTab';
 
-export type TabId = 'accretion' | 'fusion' | 'planets' | 'legacy' | 'records';
+export type TabId = 'accretion' | 'fusion' | 'planets' | 'legacy' | 'records' | 'rank';
 
-const TAB_LABELS: Record<TabId, string> = { accretion: '강착', fusion: '핵융합', planets: '행성계', legacy: '유산', records: '기록' };
-const TAB_ORDER: TabId[] = ['accretion', 'fusion', 'planets', 'legacy', 'records'];
+const TAB_LABELS: Record<TabId, string> = { accretion: '강착', fusion: '핵융합', planets: '행성계', legacy: '유산', records: '기록', rank: '랭킹' };
+const TAB_ORDER: TabId[] = ['accretion', 'fusion', 'planets', 'legacy', 'records', 'rank'];
 
 export class Panels {
   private game: Game;
@@ -26,7 +27,7 @@ export class Panels {
   active: TabId = 'accretion';
   private saveFlashUntil = 0;
 
-  constructor(game: Game, opts: { openSettings: () => void; openPrestige: () => void; openKilonova: () => void }) {
+  constructor(game: Game, opts: { openSettings: () => void; openPrestige: () => void; openKilonova: () => void; rank: RankTabHooks }) {
     this.game = game;
     this.tabs = {
       accretion: createUpgradesTab(game, 'accretion'),
@@ -34,6 +35,7 @@ export class Panels {
       planets: createPlanetsTab(game),
       legacy: createLegacyTab(game, opts.openPrestige, opts.openKilonova),
       records: createRecordsTab(game),
+      rank: createRankTab(game, opts.rank),
     };
     const header = qs('#panelHeader');
     this.metals = h('span');
@@ -88,7 +90,7 @@ export class Panels {
     for (const [i, amt] of ([1, 10, 'max'] as const).entries()) toggleClass(this.amountBtns[i]!, 'active', s.settings.buyAmount === amt);
     if (performance.now() > this.saveFlashUntil && this.saveStatus.textContent) setText(this.saveStatus, '');
     // affordability badges on inactive tabs
-    const affordable: Record<TabId, boolean> = { accretion: false, fusion: false, planets: false, legacy: false, records: false };
+    const affordable: Record<TabId, boolean> = { accretion: false, fusion: false, planets: false, legacy: false, records: false, rank: false };
     for (const u of UPGRADES) {
       if (affordable[u.tab]) continue;
       if (u.isUnlocked(s) && s.run.upgrades[u.id] < u.max && affordableCount(s, u, 1) > 0) affordable[u.tab] = true;
