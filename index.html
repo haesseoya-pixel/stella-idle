@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#05060d" />
+    <meta name="description" content="별 키우기 STELLA — 성운에서 수소를 먹여 별을 키우고, 실제 항성 진화를 따라 백색왜성·중성자별·블랙홀로 환생하는 방치형 게임" />
+    <meta property="og:title" content="STELLA — 별 키우기" />
+    <meta property="og:description" content="수소를 먹여 별을 키우세요. 행성이 생기고 문명이 자라 당신을 신으로 섬깁니다. 연료가 다하면 운명을 맞이하세요." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0' stop-color='%23fff7e0'/%3E%3Cstop offset='.45' stop-color='%23ffc46b'/%3E%3Cstop offset='1' stop-color='%23ff7a2a' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' fill='%2305060d'/%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3C/svg%3E" />
+    <title>STELLA — 별 키우기</title>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <section class="scene-wrap" id="sceneWrap">
+        <canvas id="scene" aria-label="별" role="img"></canvas>
+        <div id="hud" class="hud"></div>
+        <div id="fateWrap" class="fate-wrap" hidden></div>
+        <div id="hint" class="hint" hidden></div>
+      </section>
+      <aside class="panel" id="panel">
+        <header class="panel-header" id="panelHeader"></header>
+        <nav class="tabbar" id="tabbar" aria-label="탭"></nav>
+        <div class="tab-body" id="tabBody"></div>
+        <footer class="panel-footer" id="panelFooter"></footer>
+      </aside>
+    </div>
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+    <div id="modalRoot" class="modal-root" hidden></div>
+    <div id="storageWarn" class="storage-warn" hidden>저장 불가: 이 브라우저에서는 진행 상황이 유지되지 않습니다.</div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
